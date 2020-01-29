@@ -12,12 +12,18 @@ def computeBFSTree(adj_table, starting_val):
         the array and check whether the nodes in the previous layer are adjacent
         to the nodes in the current layer
 
+
     '''
     #type checks for the input
-    if type(adj_table) != list:return print('Error: first input must be an adjacency table (list)')
+    if type(adj_table) != list:return print('Error: first input must be an adjacency table (list of lists)')
     if type(starting_val) != int: return print('Error: starting node must be defined as an interger')
-    
-    
+    for typecheckList in adj_table:
+        if type(typecheckList) != list: return print('Error: first input must be an adjacency table (list of lists)')
+        for nodeCheck in typecheckList:
+            if type(nodeCheck) != int: return print('Error: all nodes must be intergers')
+            
+            
+        
     #First loop just defines the layers for the graph, going out from the starting 
     
     layers = [[starting_val]]
@@ -70,7 +76,7 @@ def computeBFSTree(adj_table, starting_val):
                         #append_list is the parents of the node in the right_val
                         #(aka current) layer
                         append_list.append(left_val)
-                parent[right_val] = append_list
+                mm=parent[right_val] = append_list
         #move layers along the list
         left_pointer+=1
         right_pointer+=1
@@ -78,20 +84,71 @@ def computeBFSTree(adj_table, starting_val):
 
 
 def computeBFSpath(adj_table,starting_val,goal_val):
+    '''
+    computeBFSpath uses computeBFSTree to list of how parent nodes are connected.
+    Then we work backward from the goal to the start to construct a path from 
+    node to node, moving from the goal to the starting node rooting 
+            the graph.
+    '''
     #path goes from goal to start
     path=[goal_val]
     #build connection betwee parents
     parent_list=computeBFSTree(adj_table,starting_val)
-    while path[-1] != starting_val:
-        furthest_node=path[-1]
+    while path[0] != starting_val:
+        furthest_node=path[0]
         #take first parent, since any path will be sufficient as an output
-        path.append(parent_list[furthest_node][0])
+        path.insert(0,parent_list[furthest_node][0])
     return path
 
 
 adj_table = [[1,2,3,4],[0,2,6],[0,1,3],[0,2,4,7],[0,3,5,7],[4,6,7],[1,5],[3,5]]
 starting_node = 0
-print(computeBFSTree(adj_table, starting_node))
+print('Parent test 1: ',computeBFSTree(adj_table, starting_node))
 
 goal_node = 7
-print(computeBFSpath(adj_table,starting_node,goal_node))
+print('Path test 1: ', computeBFSpath(adj_table,starting_node,goal_node))
+
+multiple_parents=[[1,3],[0,2,4],[1,5],[0,4,6],[1,3,5,7],[2,4,8],[3,7],[4,6,8],[5,7]]
+
+print('Parent test 2: ', computeBFSTree(multiple_parents, starting_node))
+goal_node2= 8
+print('Path test 2: ', computeBFSpath(multiple_parents,starting_node,goal_node2))
+
+adj_Given = [[1, 5], \
+            [0, 2, 6], \
+            [1, 3, 7], \
+            [2, 4, 8], \
+            [3, 9], \
+            [0, 6, 10], \
+            [1, 5, 7], \
+            [2, 6, 8], \
+            [3, 7, 9], \
+            [4, 8, 11], \
+            [5, 12], \
+            [9, 13], \
+            [10, 14], \
+            [11, 16], \
+            [12, 15, 17], \
+            [14, 18], \
+            [13, 19], \
+            [14, 18, 20], \
+            [15, 17, 21], \
+            [16, 24], \
+            [17, 21, 25], \
+            [18, 20, 22], \
+            [21, 23], \
+            [22, 24], \
+            [19, 23, 26], \
+            [20, 27], \
+            [24, 31], \
+            [25, 28], \
+            [27, 29], \
+            [28, 30], \
+            [29, 31], \
+            [26, 30]]
+
+start_given=0
+print('Given Parent test: ', computeBFSTree(adj_Given, start_given))
+goal_node_given=31
+print('Given Path test: ', computeBFSpath(adj_Given,starting_node,goal_node_given))
+
